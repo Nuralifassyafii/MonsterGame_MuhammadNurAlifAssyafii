@@ -43,5 +43,29 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 3657254227
+    locked: 0
+  - name: NPC
+    uniqueID: 2701737193
+    locked: 0
+  - name: Player
+    uniqueID: 3118961545
+    locked: 0
+  - name: BattlePanel
+    uniqueID: 2447539657
+    locked: 0
+  - name: PlayerBattle
+    uniqueID: 3797085161
+    locked: 0
+  - name: Enemy
+    uniqueID: 3743526805
+    locked: 0
+  - name: UI
+    uniqueID: 1513144685
+    locked: 0
+  - name: BlackPanel
+    uniqueID: 564606277
+    locked: 0
   m_RenderingLayers:
   - Default

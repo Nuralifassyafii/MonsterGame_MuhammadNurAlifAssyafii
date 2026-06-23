@@ -1,21 +1,47 @@
+using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class Dialogue
+{
+    List<string> dialogueList;
+}
 public class NPCManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private List<string> listDialogue;
+    [SerializeField] private string nama;
+    [SerializeField] private GameObject notification;
+    [SerializeField] private Sprite iconSprite;
+    
+    private DialogueUIManager _dialogueUIManager;
+
+    public string GetDialogue(int index)
     {
-        
+        return listDialogue[index];
     }
 
-    // Update is called once per frame
-    void Update()
+    public int GetDialogueLength()
     {
-        
+        return listDialogue.Count;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void SetActiveNotif(bool isActive)
     {
-        Debug.Log(collision.collider.tag);
+        notification.SetActive(isActive);
+    }
+
+    public string GetName()
+    {
+        return nama;
+    }
+
+    public Sprite GetSpriteNPC()
+    {
+        return iconSprite;
+    }
+
+    private void Start()
+    {
+        _dialogueUIManager = FindFirstObjectByType<DialogueUIManager>();
     }
 }
