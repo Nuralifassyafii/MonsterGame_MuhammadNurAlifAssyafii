@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9178546178b6b24429e8978e0e03f0e9, type: 3}
   m_Name: PlayerStats
   m_EditorClassIdentifier: Assembly-CSharp::StatsSO
-  hp: 20
-  maxHp: 20
+  hp: 12
+  maxHp: 12
   mana: 10
   maxMana: 10
   attackPower: 3
   energy: 0
-  maxEnergy: 20
+  maxEnergy: 50

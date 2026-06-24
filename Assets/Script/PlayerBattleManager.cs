@@ -38,6 +38,10 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
 
     private void Update()
     {
+        if (_battleManager.GetCurrentTurn() == EnumTurns.player)
+        {
+            rb.bodyType = RigidbodyType2D.Dynamic;
+        }
         if (isMoving)
         {
             rb.linearVelocity = new Vector2(speed, rb.linearVelocity.y);
@@ -48,13 +52,24 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
         }
     }
 
+    public StatsSO GetPlayerStats()
+    {
+        return playerStat;
+    }
+
+    public void SetPlayerHealth(int health)
+    {
+        playerStat.hp = health;
+    }
+
     public void SetActionPlayer(int action)
     {
-        actionPlayer= (EnumActions) action;
+        actionPlayer = (EnumActions)action;
     }
     private IEnumerator DoneAttacking(float seconds)
     {
         Cursor.lockState = CursorLockMode.Locked;
+        _battleManager.SetCurrentTurn(EnumTurns.standby);
         yield return new WaitForSeconds(seconds);
         doneAttacking = true;
         EndTurn();
@@ -66,7 +81,19 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
         doneAttacking = false;
         isMoving = true;
         _animator.SetBool("isMoving", true);
-        _animator.SetFloat("xDirection",1);
+        _animator.SetFloat("xDirection", 1);
+    }
+
+    public void PlayIsHurt()
+    {
+        if (playerStat.hp > 0)
+        {
+            _animator.SetTrigger("isHurtTurnBase");
+        }
+        else
+        {
+            _animator.SetBool("isDeathTurnBase", true);
+        }
     }
 
     public void ShowEffect(string effectName)
@@ -90,7 +117,9 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
 
     public void EndTurn()
     {
-        _battleManager.SetCurrentTurn(EnumTurns.standby);
+        _battleManager.SetCurrentTurn(EnumTurns.enemy);
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        StartCoroutine(enemy.DelayTurn(2f));
     }
 
     public void DecreaseEnemyHealth(int attackPower)
@@ -101,7 +130,7 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
             enemy.SetEnemyHealth(modifiedHealth);
             enemy.PlayIsHurt();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Debug.LogError("Terjadi kesalahan saat mengurangi HP musuh : " + e.Message); //nanti diganti pakai Notif (masih belum)
         }
@@ -132,13 +161,18 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
     private void OnCollisionEnter2D(Collision2D collision)
     {
         isMoving = false;
+        rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
         _animator.SetBool("isMoving", false);
         _animator.SetFloat("xDirection", 0);
         if (collision.gameObject.tag == "Enemy")
         {
             enemy = collision.gameObject.GetComponent<EnemyBattle>();
         }
-        GetPushedButton(actionPlayer);
+
+        if (_battleManager.GetCurrentTurn() == EnumTurns.player)
+        {
+            GetPushedButton(actionPlayer);
+        }
     }
 
     public void GetPushedButton(EnumActions enumAction)
@@ -161,7 +195,7 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
                     break;
             }
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Debug.LogError("ada yang salah saat mendapatkan pushed button : " + e.Message);
         }
