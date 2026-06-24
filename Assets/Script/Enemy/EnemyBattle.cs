@@ -20,6 +20,11 @@ public class EnemyBattle : MonoBehaviour
         //ultimate here
     }
 
+    public StatsSO GetEnemyStats()
+    {
+        return enemyStats;
+    }
+
     private void Start()
     {
         enemyStats = ScriptableObject.Instantiate(enemyStats);
