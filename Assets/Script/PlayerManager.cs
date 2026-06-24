@@ -56,8 +56,12 @@ public class PlayerManager : MonoBehaviour
     {
         detectedGameObject = collision.gameObject;
         CheckNPCObject(detectedGameObject);
+    }
 
-
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        MovingGate movedGate = collision.gameObject.GetComponent<MovingGate>();
+        movedGate.Moving();
     }
 
     public void CheckNPCObject(GameObject detectedGameObject)

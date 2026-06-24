@@ -22,13 +22,23 @@ public class BattleUIManager : MonoBehaviour
 
     [Header("action System")]
     [SerializeField] private EnumTurns currentTurn;
+    [SerializeField] private GameObject BattlePanel;
     private bool isBattle = false;
 
     public EnumTurns GetCurrentTurn()
     {
         return currentTurn;
     }
-    
+
+    public void StartBattle()
+    {
+        BattlePanel.SetActive(true);
+    }
+    public void FinishBattle()
+    {
+        BattlePanel.SetActive(false);
+    }
+
     public void SetCurrentTurn(EnumTurns turn)
     {
         currentTurn = turn;
@@ -41,8 +51,14 @@ public class BattleUIManager : MonoBehaviour
 
     private void Update()
     {
-        SetCurrentHealthPlayer();
-        SetCurrentManaPlayer();
+        if (_playerBattle != null)
+        {
+            SetCurrentHealthPlayer();
+            SetCurrentManaPlayer();
+            SetCurrentHealthEnemy();
+            SetCurrentManaEnemy();
+            SetEnergyPlayer();
+        }
     }
 
     private void Start()
@@ -59,8 +75,8 @@ public class BattleUIManager : MonoBehaviour
     public void SetCurrentHealthPlayer()
     {
         float modifiedHealth = ((float)_playerBattle.GetPlayerStats().hp / (float)_playerBattle.GetPlayerStats().maxHp) * 70 - 70;
-        playerCurrentHealthBarImage.rectTransform.offsetMax = new Vector2 (modifiedHealth,0);
-        playerCurrentHealthBar.text = _playerBattle.GetPlayerStats().hp.ToString() + " / " +_playerBattle.GetPlayerStats().maxHp.ToString();
+        playerCurrentHealthBarImage.rectTransform.offsetMax = new Vector2(modifiedHealth, 0);
+        playerCurrentHealthBar.text = _playerBattle.GetPlayerStats().hp.ToString() + " / " + _playerBattle.GetPlayerStats().maxHp.ToString();
     }
 
     public void SetCurrentManaPlayer()
@@ -68,5 +84,25 @@ public class BattleUIManager : MonoBehaviour
         float modifiedMana = ((float)_playerBattle.GetPlayerStats().mana / (float)_playerBattle.GetPlayerStats().maxMana) * 70 - 70;
         playerCurrentManaImage.rectTransform.offsetMax = new Vector2(modifiedMana, 0);
         playerCurrentMana.text = _playerBattle.GetPlayerStats().mana.ToString() + " / " + _playerBattle.GetPlayerStats().maxMana.ToString();
+    }
+
+    public void SetCurrentHealthEnemy()
+    {
+        float modifiedHealth = ((float)enemyBattle.GetEnemyStats().hp / (float)enemyBattle.GetEnemyStats().maxHp) * 83 - 83;
+        enemyCurrentHealthBarImage.rectTransform.offsetMin = new Vector2(-1 * modifiedHealth, 0);
+        enemyCurrentHealthBar.text = enemyBattle.GetEnemyStats().hp.ToString() + " / " + enemyBattle.GetEnemyStats().maxHp.ToString();
+    }
+
+    public void SetCurrentManaEnemy()
+    {
+        float modifiedMana = ((float)enemyBattle.GetEnemyStats().mana / (float)enemyBattle.GetEnemyStats().maxMana) * 83 - 83;
+        enemyCurrentManaImage.rectTransform.offsetMin = new Vector2(-1 * modifiedMana, 0);
+        enemyCurrentMana.text = enemyBattle.GetEnemyStats().mana.ToString() + " / " + enemyBattle.GetEnemyStats().maxMana.ToString();
+    }
+
+    public void SetEnergyPlayer()
+    {
+        float modifiedEnergy = ((float)_playerBattle.GetPlayerStats().energy / (float)_playerBattle.GetPlayerStats().maxEnergy);
+        playerEnergy.fillAmount = modifiedEnergy;
     }
 }

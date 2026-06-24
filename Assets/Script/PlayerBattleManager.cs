@@ -38,18 +38,18 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
 
     private void Update()
     {
-        if (_battleManager.GetCurrentTurn() == EnumTurns.player)
-        {
-            rb.bodyType = RigidbodyType2D.Dynamic;
-        }
-        if (isMoving)
-        {
-            rb.linearVelocity = new Vector2(speed, rb.linearVelocity.y);
-        }
-        if (doneAttacking)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, posisiAwal, speed * Time.deltaTime);
-        }
+            if (_battleManager.GetCurrentTurn() == EnumTurns.player)
+            {
+                rb.bodyType = RigidbodyType2D.Dynamic;
+            }
+            if (isMoving)
+            {
+                rb.linearVelocity = new Vector2(speed, rb.linearVelocity.y);
+            }
+            if (doneAttacking)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, posisiAwal, speed * Time.deltaTime);
+            }
     }
 
     public StatsSO GetPlayerStats()
@@ -112,6 +112,8 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
         {
             _animator.SetTrigger("isAttackTurnBase");
             StartCoroutine(DoneAttacking(2f));
+            playerStat.energy += 2;
+            playerStat.mana += 3;
         }
     }
 
@@ -144,6 +146,10 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
             DecreaseEnemyHealth(5);
             playerStat.mana -= 3;
             StartCoroutine(DoneAttacking(2f));
+        }
+        else
+        {
+            Debug.Log("Mana Not Enough"); //biasa nanti pake notif (masih belum)
         }
     }
 
