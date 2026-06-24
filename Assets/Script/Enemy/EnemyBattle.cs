@@ -4,6 +4,7 @@ public class EnemyBattle : MonoBehaviour
 {
     [SerializeField] private StatsSO enemyStats;
     [SerializeField] private int test;
+    private Animator _animator;
 
     public void Attack()
     {
@@ -25,8 +26,19 @@ public class EnemyBattle : MonoBehaviour
         return enemyStats;
     }
 
+    public void PlayIsHurt()
+    {
+        _animator.SetTrigger("isHurt");
+    }
+
+    public void SetEnemyHealth(int health)
+    {
+        enemyStats.hp = health;
+    }
+
     private void Start()
     {
         enemyStats = ScriptableObject.Instantiate(enemyStats);
+        _animator = GetComponent<Animator>();
     }
 }

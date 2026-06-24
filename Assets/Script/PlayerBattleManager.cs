@@ -1,26 +1,39 @@
+using NUnit.Framework;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
+
+[System.Serializable]
+public class EffectList
+{
+    public string effectName;
+    public GameObject objectEffect;
+}
 public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
 {
     [SerializeField] private StatsSO playerStat;
-    [SerializeField] private EnemyBattle enemy;
-    [SerializeField] Animator _animator;
-    
+    [SerializeField] List<EffectList> effectList;
+
     private bool isMoving = false;
     private bool doneAttacking = false;
     private Rigidbody2D rb;
     private Vector3 posisiAwal;
     private float speed = 15;
+    private BattleUIManager _battleManager;
+    private EnemyBattle enemy;
+    private Animator _animator;
+    private EnumActions actionPlayer = EnumActions.idle;
 
 
     private void Start()
     {
         playerStat = ScriptableObject.Instantiate(playerStat);
+        _battleManager = FindFirstObjectByType<BattleUIManager>();
         rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         posisiAwal = transform.position;
-        TriggerMovement();
     }
 
     private void Update()
@@ -35,15 +48,35 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
         }
     }
 
-    private IEnumerator WaitForSecond(float seconds)
+    public void SetActionPlayer(int action)
     {
+        actionPlayer= (EnumActions) action;
+    }
+    private IEnumerator DoneAttacking(float seconds)
+    {
+        Cursor.lockState = CursorLockMode.Locked;
         yield return new WaitForSeconds(seconds);
         doneAttacking = true;
+        EndTurn();
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public void TriggerMovement()
     {
+        doneAttacking = false;
         isMoving = true;
+        _animator.SetBool("isMoving", true);
+        _animator.SetFloat("xDirection",1);
+    }
+
+    public void ShowEffect(string effectName)
+    {
+        effectList.Find(item => item.effectName.Equals(effectName)).objectEffect.SetActive(true);
+    }
+
+    public void HideEffect(string effectName)
+    {
+        effectList.Find(item => item.effectName.Equals(effectName)).objectEffect.SetActive(false);
     }
 
     public void Attack()
@@ -51,43 +84,87 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
         if (!isMoving)
         {
             _animator.SetTrigger("isAttackTurnBase");
-            StartCoroutine(WaitForSecond(2f));
+            StartCoroutine(DoneAttacking(2f));
         }
-        //animation attack
-        //ngurangin darah musuh
-        //balik movement
-        //end turn
+    }
+
+    public void EndTurn()
+    {
+        _battleManager.SetCurrentTurn(EnumTurns.standby);
+    }
+
+    public void DecreaseEnemyHealth(int attackPower)
+    {
+        try
+        {
+            int modifiedHealth = enemy.GetEnemyStats().hp - attackPower;
+            enemy.SetEnemyHealth(modifiedHealth);
+            enemy.PlayIsHurt();
+        }
+        catch(Exception e)
+        {
+            Debug.LogError("Terjadi kesalahan saat mengurangi HP musuh : " + e.Message); //nanti diganti pakai Notif (masih belum)
+        }
     }
 
     public void Special()
     {
-        //pindah movement
-        //animation special
-        //ngurangin darah musuh
-        //balik movement
-        //end turn
+        if (!isMoving && playerStat.mana >= 3)
+        {
+            _animator.SetTrigger("isSpecialTurnBase");
+            DecreaseEnemyHealth(5);
+            playerStat.mana -= 3;
+            StartCoroutine(DoneAttacking(2f));
+        }
     }
 
     public void Ultimate()
     {
-        //cek energy penuh atau nggk
-        //kalau nggk penuh batal
-        // kalau penuh pindah movement
-        // animation special
-        // depleted energy
-        // balik movement
-        // end turn
+        if (!isMoving && playerStat.energy < 100)
+        {
+            _animator.SetTrigger("isUltimateTurnBase");
+            DecreaseEnemyHealth(10);
+            playerStat.energy = 0;
+            StartCoroutine(DoneAttacking(6f));
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         isMoving = false;
-        if(collision.gameObject.tag == "Enemy")
+        _animator.SetBool("isMoving", false);
+        _animator.SetFloat("xDirection", 0);
+        if (collision.gameObject.tag == "Enemy")
         {
             enemy = collision.gameObject.GetComponent<EnemyBattle>();
         }
+        GetPushedButton(actionPlayer);
+    }
 
-        Attack();
+    public void GetPushedButton(EnumActions enumAction)
+    {
+        try
+        {
+            switch (enumAction)
+            {
+                case EnumActions.attack:
+                    Attack();
+                    break;
+                case EnumActions.special:
+                    Special();
+                    break;
+                case EnumActions.ultimate:
+                    Ultimate();
+                    break;
+                default:
+                    Debug.Log("no case"); //nanti pake notif (masih belum)
+                    break;
+            }
+        }
+        catch(Exception e)
+        {
+            Debug.LogError("ada yang salah saat mendapatkan pushed button : " + e.Message);
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)

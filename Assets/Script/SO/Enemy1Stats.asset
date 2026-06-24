@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9178546178b6b24429e8978e0e03f0e9, type: 3}
-  m_Name: EnemyStats
+  m_Name: Enemy1Stats
   m_EditorClassIdentifier: Assembly-CSharp::StatsSO
-  hp: 0
-  maxHp: 0
+  hp: 10
+  maxHp: 10
   mana: 0
   maxMana: 0
-  attackPower: 0
+  attackPower: 1
   energy: 0
   maxEnergy: 0

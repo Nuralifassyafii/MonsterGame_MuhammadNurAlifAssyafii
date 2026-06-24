@@ -23,7 +23,25 @@ public class BattleUIManager : MonoBehaviour
     [SerializeField] private Image enemyEnergy;
 
     [Header("action System")]
-    [SerializeField] private EnumActions currentTurn;
-    
+    [SerializeField] private EnumTurns currentTurn;
 
+    public EnumTurns GetCurrentTurn()
+    {
+        return currentTurn;
+    }
+    
+    public void SetCurrentTurn(EnumTurns turn)
+    {
+        currentTurn = turn;
+    }
+
+    private void Update()
+    {
+        Debug.Log(GetCurrentTurn().ToString());
+    }
+
+    private void Start()
+    {
+        SetCurrentTurn(EnumTurns.player);
+    }
 }
