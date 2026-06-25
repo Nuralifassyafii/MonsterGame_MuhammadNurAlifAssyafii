@@ -12,6 +12,9 @@ public class NPCManager : MonoBehaviour
     [SerializeField] private string nama;
     [SerializeField] private GameObject notification;
     [SerializeField] private Sprite iconSprite;
+    [SerializeField] private bool isGivingItem;
+    [SerializeField] private PlayerBattleManager playerStats;
+
     
     private DialogueUIManager _dialogueUIManager;
 
@@ -28,6 +31,14 @@ public class NPCManager : MonoBehaviour
     public void SetActiveNotif(bool isActive)
     {
         notification.SetActive(isActive);
+    }
+
+    public void CheckHasItem()
+    {
+        if (isGivingItem && playerStats != null)
+        {
+            playerStats.GetPlayerStats().healthItem += 1;
+        }
     }
 
     public string GetName()

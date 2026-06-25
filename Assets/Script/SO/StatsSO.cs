@@ -12,4 +12,5 @@ public class StatsSO : ScriptableObject
     public int attackPower;
     public int energy;
     public int maxEnergy;
+    public int healthItem;
 }

@@ -74,6 +74,11 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
         _audioManager.PlayAudio("fireCrack");
     }
 
+    public void PlayHeal()
+    {
+        _audioManager.PlayAudio("heal");
+    }
+
     public void StopAudio()
     {
         _audioManager.StopAllAudio();
@@ -173,9 +178,10 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
 
     public void Special()
     {
-        if (!isMoving && playerStat.mana >= 3)
+        if (!isMoving && playerStat.mana >= 5)
         {
             _animator.SetTrigger("isSpecialTurnBase");
+            playerStat.energy += 5;
         }
         else
         {
@@ -190,6 +196,22 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
         {
             _animator.SetTrigger("isUltimateTurnBase");
             StartCoroutine(DoneAttacking(6f));
+        }
+    }
+
+    public void Heal()
+    {
+        if (!isMoving && playerStat.healthItem > 0)
+        {
+            _animator.SetTrigger("isHeal");
+            playerStat.hp += 5;
+            if(playerStat.hp > playerStat.maxHp)
+            {
+                playerStat.hp = playerStat.maxHp;
+            }
+            playerStat.healthItem--;
+            playerStat.energy++;
+            StartCoroutine(DoneAttacking(2f));
         }
     }
 
@@ -256,6 +278,9 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
                     break;
                 case EnumActions.ultimate:
                     Ultimate();
+                    break;
+                case EnumActions.item:
+                    Heal();
                     break;
                 default:
                     Debug.Log("no case"); //nanti pake notif (masih belum)

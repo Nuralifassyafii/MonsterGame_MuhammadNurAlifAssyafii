@@ -239,4 +239,9 @@ public class EnemyBattle : MonoBehaviour, BattleActionInterface
             Debug.LogError("ada yang salah saat memasukan object player : " + e.Message);
         }
     }
+
+    public void Heal()
+    {
+        throw new NotImplementedException();
+    }
 }

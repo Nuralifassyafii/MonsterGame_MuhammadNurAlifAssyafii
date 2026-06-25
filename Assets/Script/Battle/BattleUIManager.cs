@@ -10,6 +10,7 @@ public class BattleUIManager : MonoBehaviour
     [SerializeField] private TMP_Text playerCurrentMana;
     [SerializeField] private Image playerCurrentManaImage;
     [SerializeField] private Image playerEnergy;
+    [SerializeField] private TMP_Text HealthText;
     [SerializeField] private GameObject playerGO;
     [SerializeField] private PlayerBattleManager _playerBattle;
 
@@ -68,6 +69,7 @@ public class BattleUIManager : MonoBehaviour
             SetCurrentHealthPlayer();
             SetCurrentManaPlayer();
             SetEnergyPlayer();
+            SetHealthItemPlayer();
         }
         if (enemyBattle != null)
         {
@@ -81,6 +83,11 @@ public class BattleUIManager : MonoBehaviour
         SetCurrentTurn(EnumTurns.player);
         _audioManager = FindFirstObjectByType<AudioManager>();
         playerOpenWorld = FindFirstObjectByType<PlayerManager>();
+    }
+
+    public void SetHealthItemPlayer()
+    {
+        HealthText.text = "Health X"+_playerBattle.GetPlayerStats().healthItem;
     }
 
     public void SetEnemyBattleManager(EnemyBattle attackedEnemy)

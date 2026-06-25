@@ -22,7 +22,6 @@ public class PlayerManager : MonoBehaviour
     private BattleUIManager _battleUIManager;
     private AudioManager _audioManager;
 
-    [SerializeField] private StatsSO playerStats;
     [SerializeField] private DialogueUIManager _dialogueUIManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -31,7 +30,6 @@ public class PlayerManager : MonoBehaviour
         _animator = GetComponent<Animator>();
         _audioManager = FindFirstObjectByType<AudioManager>();
         _dialogueUIManager = FindFirstObjectByType<DialogueUIManager>();
-        playerStats = ScriptableObject.Instantiate(playerStats);
         _battleUIManager = FindFirstObjectByType<BattleUIManager>();
     }
 
@@ -160,6 +158,7 @@ public class PlayerManager : MonoBehaviour
         else
         {
             counterDialogue = 0;
+            talkedNPC.CheckHasItem();
             _dialogueUIManager.StatusDialogueUI(false);
         }
     }
