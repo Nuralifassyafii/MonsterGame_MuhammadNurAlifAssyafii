@@ -5,13 +5,14 @@ public class MovingGate : MonoBehaviour
 {
     private PlayerManager player;
     [SerializeField] Vector3 newPlayerPosition;
-    [SerializeField] GameObject camera;
+    GameObject camera;
     [SerializeField] Vector3 newCameraPosition;
     private bool isCameraMoving = false;
 
     private void Start()
     {
         player = FindFirstObjectByType<PlayerManager>();
+        camera = FindFirstObjectByType<Camera>().gameObject;
     }
     private void Update()
     {
@@ -28,14 +29,16 @@ public class MovingGate : MonoBehaviour
 
     public IEnumerator MoveCamera()
     {
+        player.SetPermissionMoving(false);
         yield return new WaitForSeconds(1f);
         isCameraMoving = true;
     }
 
     private IEnumerator CheckIfCameraDoneMoving()
     {
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(3f);
         isCameraMoving = false;
+        player.SetPermissionMoving(true);
     }
 
     public void Moving()

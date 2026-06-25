@@ -15,9 +15,12 @@ public class PlayerManager : MonoBehaviour
     private Animator _animator;
     private GameObject detectedGameObject;
     private NPCManager talkedNPC = null;
+    private EnemyBattle enemyNPC = null;
     private int counterDialogue = 0;
     private string IS_ATTACKING = "isAttacking";
     private string IS_MOVING = "isMoving";
+    private bool permissionMoving = true;
+    private BattleUIManager _battleUIManager;
 
     [SerializeField] private StatsSO playerStats;
     [SerializeField] private DialogueUIManager _dialogueUIManager;
@@ -29,15 +32,33 @@ public class PlayerManager : MonoBehaviour
         _animator = GetComponent<Animator>();
         _dialogueUIManager = FindFirstObjectByType<DialogueUIManager>();
         playerStats = ScriptableObject.Instantiate(playerStats);
+        _battleUIManager = FindFirstObjectByType<BattleUIManager>();
+    }
+
+    public EnemyBattle GetInteractedEnemy()
+    {
+        return enemyNPC;
     }
 
     public void OnMove(InputAction.CallbackContext value)
     {
-        direction = value.ReadValue<Vector2>();
+        if (permissionMoving)
+        {
+            direction = value.ReadValue<Vector2>();
+        }
+        else
+        {
+            direction = new Vector2(0, 0);
+        }
         xDirection = direction.x;
         yDirection = direction.y;
         _animator.SetFloat("xDirection", xDirection);
         SetIdle(xDirection, yDirection);
+    }
+
+    public void SetPermissionMoving(bool canMove)
+    {
+        permissionMoving = canMove;
     }
 
     public void SetIdle(float xDirection, float yDirection)
@@ -56,6 +77,7 @@ public class PlayerManager : MonoBehaviour
     {
         detectedGameObject = collision.gameObject;
         CheckNPCObject(detectedGameObject);
+        CheckEnemyObject(detectedGameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -69,8 +91,21 @@ public class PlayerManager : MonoBehaviour
         if (detectedGameObject.GetComponent<NPCManager>() != null)
         {
             talkedNPC = detectedGameObject.GetComponent<NPCManager>();
+            talkedNPC.SetActiveNotif(true);
         }
-        talkedNPC.SetActiveNotif(true);
+    }
+
+    public void CheckEnemyObject(GameObject detectedGameObject)
+    {
+        if (detectedGameObject.GetComponent<EnemyBattle>() != null)
+        {
+            enemyNPC = detectedGameObject.GetComponent<EnemyBattle>();
+        }
+    }
+
+    public void SetPlayerObject(bool isActive)
+    {
+        gameObject.SetActive(isActive);
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -115,8 +150,6 @@ public class PlayerManager : MonoBehaviour
         {
             counterDialogue = 0;
             _dialogueUIManager.StatusDialogueUI(false);
-            //OpenDialogue(counterDialogue);
-            //counterDialogue++;
         }
     }
 
@@ -124,9 +157,13 @@ public class PlayerManager : MonoBehaviour
     {
         if (cntx.started)
         {
-            _animator.SetBool(IS_ATTACKING,true);
+            _animator.SetBool(IS_ATTACKING, true);
+            if(enemyNPC != null)
+            {
+                _battleUIManager.StartBattle();
+            }
         }
-        else if(cntx.canceled)
+        else if (cntx.canceled)
         {
             _animator.SetBool(IS_ATTACKING, false);
         }

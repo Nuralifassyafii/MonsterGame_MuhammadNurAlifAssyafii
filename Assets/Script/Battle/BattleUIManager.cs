@@ -18,11 +18,12 @@ public class BattleUIManager : MonoBehaviour
     [SerializeField] private TMP_Text enemyCurrentMana;
     [SerializeField] private Image enemyCurrentManaImage;
     [SerializeField] private Image enemyEnergy;
-    [SerializeField] private EnemyBattle enemyBattle;
+    private EnemyBattle enemyBattle;
 
     [Header("action System")]
     [SerializeField] private EnumTurns currentTurn;
     [SerializeField] private GameObject BattlePanel;
+    private PlayerManager playerOpenWorld;
     private bool isBattle = false;
 
     public EnumTurns GetCurrentTurn()
@@ -33,10 +34,13 @@ public class BattleUIManager : MonoBehaviour
     public void StartBattle()
     {
         BattlePanel.SetActive(true);
+        playerOpenWorld.SetPlayerObject(false);
+        SetEnemyBattleManager(playerOpenWorld.GetInteractedEnemy());
     }
     public void FinishBattle()
     {
         BattlePanel.SetActive(false);
+        playerOpenWorld.SetPlayerObject(true);
     }
 
     public void SetCurrentTurn(EnumTurns turn)
@@ -55,16 +59,19 @@ public class BattleUIManager : MonoBehaviour
         {
             SetCurrentHealthPlayer();
             SetCurrentManaPlayer();
+            SetEnergyPlayer();
+        }
+        if (enemyBattle != null)
+        {
             SetCurrentHealthEnemy();
             SetCurrentManaEnemy();
-            SetEnergyPlayer();
         }
     }
 
     private void Start()
     {
         SetCurrentTurn(EnumTurns.player);
-        _playerBattle = FindFirstObjectByType<PlayerBattleManager>();
+        playerOpenWorld = FindFirstObjectByType<PlayerManager>();
     }
 
     public void SetEnemyBattleManager(EnemyBattle attackedEnemy)

@@ -121,7 +121,7 @@ public class EnemyBattle : MonoBehaviour, BattleActionInterface
         else
         {
             _animator.SetBool("isDeath", true);
-            //kembali ke screen open world
+            battleManager.FinishBattle();
         }
     }
 
