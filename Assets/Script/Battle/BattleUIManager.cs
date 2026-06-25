@@ -10,6 +10,7 @@ public class BattleUIManager : MonoBehaviour
     [SerializeField] private TMP_Text playerCurrentMana;
     [SerializeField] private Image playerCurrentManaImage;
     [SerializeField] private Image playerEnergy;
+    [SerializeField] private GameObject playerGO;
     [SerializeField] private PlayerBattleManager _playerBattle;
 
     [Header("Enemy Stats")]
@@ -25,6 +26,7 @@ public class BattleUIManager : MonoBehaviour
     [SerializeField] private GameObject BattlePanel;
     private PlayerManager playerOpenWorld;
     private bool isBattle = false;
+    private AudioManager _audioManager;
 
     public EnumTurns GetCurrentTurn()
     {
@@ -33,8 +35,9 @@ public class BattleUIManager : MonoBehaviour
 
     public void StartBattle()
     {
-        BattlePanel.SetActive(true);
         playerOpenWorld.SetPlayerObject(false);
+        playerGO.transform.localPosition = new Vector3(-0.4f, 0.2f, 0);
+        BattlePanel.SetActive(true);
         if(enemyBattle != null)
         {
             enemyBattle.SetEnemySprites(false);
@@ -44,6 +47,8 @@ public class BattleUIManager : MonoBehaviour
     {
         BattlePanel.SetActive(false);
         playerOpenWorld.SetPlayerObject(true);
+        _audioManager.StopAllAudio();
+        _audioManager.PlayAudio("openWorld");
     }
 
     public void SetCurrentTurn(EnumTurns turn)
@@ -74,6 +79,7 @@ public class BattleUIManager : MonoBehaviour
     private void Start()
     {
         SetCurrentTurn(EnumTurns.player);
+        _audioManager = FindFirstObjectByType<AudioManager>();
         playerOpenWorld = FindFirstObjectByType<PlayerManager>();
     }
 

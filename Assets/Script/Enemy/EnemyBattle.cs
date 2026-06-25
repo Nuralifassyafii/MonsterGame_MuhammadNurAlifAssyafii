@@ -14,6 +14,8 @@ public class EnemyBattle : MonoBehaviour, BattleActionInterface
     private string IS_ATTACK = "isAttack";
     private string IS_SPECIAL = "isSpecial";
     private string IS_ULTIMATE = "isUltimate";
+    private string IS_HURT = "isHurt";
+    private string IS_DEATH = "isDeath";
     private Animator _animator;
     private PlayerBattleManager playerObject;
     private bool isMoving = false;
@@ -23,6 +25,7 @@ public class EnemyBattle : MonoBehaviour, BattleActionInterface
     private Vector3 posisiAwal;
     private float speed = 15;
     private int skillCost = 5;
+    private AudioManager _audioManager;
 
 
     private void Start()
@@ -31,7 +34,18 @@ public class EnemyBattle : MonoBehaviour, BattleActionInterface
         _animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         battleManager = FindAnyObjectByType<BattleUIManager>();
+        _audioManager = FindAnyObjectByType<AudioManager>();
         posisiAwal = transform.position;
+    }
+
+    public void PlaySword()
+    {
+        _audioManager.PlayAudio("sword");
+    }
+
+    public void PlayBite()
+    {
+        _audioManager.PlayAudio("bite");
     }
 
     public void SetEnemySprites(bool isActive)
@@ -167,12 +181,15 @@ public class EnemyBattle : MonoBehaviour, BattleActionInterface
     {
         if(enemyStats.hp > 0)
         {
-            _animator.SetTrigger("isHurt");
+            _animator.SetTrigger(IS_HURT);
         }
         else
         {
             battleManager.SetCurrentTurn(EnumTurns.player);
-            _animator.SetBool("isDeath", true);
+            _animator.SetBool(IS_DEATH, true);
+            playerObject.HideAllEffect();
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
             battleManager.FinishBattle();
         }
     }

@@ -25,15 +25,17 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
     private EnemyBattle enemy;
     private Animator _animator;
     private EnumActions actionPlayer = EnumActions.idle;
+    private AudioManager _audioManager;
 
 
     private void Start()
     {
         playerStat = ScriptableObject.Instantiate(playerStat);
         _battleManager = FindFirstObjectByType<BattleUIManager>();
+        _audioManager = FindFirstObjectByType<AudioManager>();
         rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
-        posisiAwal = transform.position;
+        posisiAwal = transform.localPosition;
     }
 
     private void Update()
@@ -48,8 +50,33 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
             }
             if (doneAttacking)
             {
-                transform.position = Vector3.MoveTowards(transform.position, posisiAwal, speed * Time.deltaTime);
+                transform.localPosition = Vector3.MoveTowards(transform.localPosition, posisiAwal, speed * Time.deltaTime);
             }
+    }
+
+    public void PlayPunch()
+    {
+        _audioManager.PlayAudio("punch");
+    }
+
+    public void PlayExplosion(int number)
+    {
+        _audioManager.PlayAudio("explosion" + number.ToString());
+    }
+
+    public void PlayFire()
+    {
+        _audioManager.PlayAudio("fire");
+    }
+
+    public void PlayFireCrack()
+    {
+        _audioManager.PlayAudio("fireCrack");
+    }
+
+    public void StopAudio()
+    {
+        _audioManager.StopAllAudio();
     }
 
     public StatsSO GetPlayerStats()
@@ -97,6 +124,13 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
         }
     }
 
+    public void HideAllEffect()
+    {
+        for (int i = 0;i < effectList.Count;i++)
+        {
+            effectList[i].objectEffect.SetActive(false);
+        }
+    }
     public void ShowEffect(string effectName)
     {
         effectList.Find(item => item.effectName.Equals(effectName)).objectEffect.SetActive(true);

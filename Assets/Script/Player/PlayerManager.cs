@@ -20,6 +20,7 @@ public class PlayerManager : MonoBehaviour
     private string IS_MOVING = "isMoving";
     private bool permissionMoving = true;
     private BattleUIManager _battleUIManager;
+    private AudioManager _audioManager;
 
     [SerializeField] private StatsSO playerStats;
     [SerializeField] private DialogueUIManager _dialogueUIManager;
@@ -28,6 +29,7 @@ public class PlayerManager : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
+        _audioManager = FindFirstObjectByType<AudioManager>();
         _dialogueUIManager = FindFirstObjectByType<DialogueUIManager>();
         playerStats = ScriptableObject.Instantiate(playerStats);
         _battleUIManager = FindFirstObjectByType<BattleUIManager>();
@@ -169,6 +171,8 @@ public class PlayerManager : MonoBehaviour
             _animator.SetBool(IS_ATTACKING, true);
             if(enemyNPC != null)
             {
+                _audioManager.StopAllAudio();
+                _audioManager.PlayAudio("battle");
                 _battleUIManager.StartBattle();
             }
         }
