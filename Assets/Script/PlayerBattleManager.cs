@@ -93,6 +93,7 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
         else
         {
             _animator.SetBool("isDeathTurnBase", true);
+            //show panel death (masih belum)
         }
     }
 
@@ -112,8 +113,6 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
         {
             _animator.SetTrigger("isAttackTurnBase");
             StartCoroutine(DoneAttacking(2f));
-            playerStat.energy += 2;
-            playerStat.mana += 3;
         }
     }
 
@@ -143,24 +142,52 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
         if (!isMoving && playerStat.mana >= 3)
         {
             _animator.SetTrigger("isSpecialTurnBase");
-            DecreaseEnemyHealth(5);
-            playerStat.mana -= 3;
-            StartCoroutine(DoneAttacking(2f));
         }
         else
         {
             Debug.Log("Mana Not Enough"); //biasa nanti pake notif (masih belum)
         }
+        StartCoroutine(DoneAttacking(2f));
     }
 
     public void Ultimate()
     {
-        if (!isMoving && playerStat.energy < 100)
+        if (!isMoving && playerStat.energy == playerStat.maxEnergy)
         {
             _animator.SetTrigger("isUltimateTurnBase");
-            DecreaseEnemyHealth(10);
-            playerStat.energy = 0;
             StartCoroutine(DoneAttacking(6f));
+        }
+    }
+
+    public void DecreaseMana(int amount)
+    {
+        playerStat.mana -= amount;
+        if (playerStat.mana < 0)
+        {
+            playerStat.mana = 0;
+        }
+    }
+
+    public void DecreaseEnergy()
+    {
+        playerStat.energy = 0;
+    }
+
+    public void AddMana(int amount)
+    {
+        playerStat.mana += amount;
+        if(playerStat.mana > playerStat.maxMana)
+        {
+            playerStat.mana = playerStat.maxMana;
+        }
+    }
+
+    public void AddEnergy(int amount)
+    {
+        playerStat.energy += amount;
+        if(playerStat.energy > playerStat.maxEnergy)
+        {
+            playerStat.energy = playerStat.maxEnergy;
         }
     }
 

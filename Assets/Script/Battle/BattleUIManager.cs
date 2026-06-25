@@ -35,7 +35,10 @@ public class BattleUIManager : MonoBehaviour
     {
         BattlePanel.SetActive(true);
         playerOpenWorld.SetPlayerObject(false);
-        SetEnemyBattleManager(playerOpenWorld.GetInteractedEnemy());
+        if(enemyBattle != null)
+        {
+            enemyBattle.SetEnemySprites(false);
+        }
     }
     public void FinishBattle()
     {

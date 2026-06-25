@@ -115,12 +115,33 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
+  - time: 0
+    functionName: DecreaseMana
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 5
+    messageOptions: 0
   - time: 0.06666667
     functionName: ShowEffect
     data: flameEffect
     objectReferenceParameter: {fileID: 2665900511360610641, guid: 93cc675e7e1419745a283fb952e3b952, type: 3}
     floatParameter: 0
     intParameter: 0
+    messageOptions: 0
+  - time: 0.083333336
+    functionName: DecreaseEnemyHealth
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 3
+    messageOptions: 0
+  - time: 0.48333332
+    functionName: DecreaseEnemyHealth
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 3
     messageOptions: 0
   - time: 0.5
     functionName: HideEffect

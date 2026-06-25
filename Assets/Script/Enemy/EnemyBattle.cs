@@ -2,13 +2,18 @@ using System;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyBattle : MonoBehaviour, BattleActionInterface
 {
     [SerializeField] private StatsSO enemyStats;
-    [SerializeField] private int test;
-
+    [SerializeField] private GameObject enemySprites;
+    
+    private string IS_MOVING = "isMoving";
+    private string IS_ATTACK = "isAttack";
+    private string IS_SPECIAL = "isSpecial";
+    private string IS_ULTIMATE = "isUltimate";
     private Animator _animator;
     private PlayerBattleManager playerObject;
     private bool isMoving = false;
@@ -17,6 +22,7 @@ public class EnemyBattle : MonoBehaviour, BattleActionInterface
     private BattleUIManager battleManager;
     private Vector3 posisiAwal;
     private float speed = 15;
+    private int skillCost = 5;
 
 
     private void Start()
@@ -28,6 +34,11 @@ public class EnemyBattle : MonoBehaviour, BattleActionInterface
         posisiAwal = transform.position;
     }
 
+    public void SetEnemySprites(bool isActive)
+    {
+        enemySprites.SetActive(isActive);
+    }
+
     private void Update()
     {
         if(battleManager.GetCurrentTurn() == EnumTurns.enemy)
@@ -36,7 +47,7 @@ public class EnemyBattle : MonoBehaviour, BattleActionInterface
         }
         if (isMoving)
         {
-            _animator.SetBool("isMoving", true);
+            _animator.SetBool(IS_MOVING, true);
             rb.linearVelocity = new Vector2(-speed, rb.linearVelocity.y);
         }
         if (doneAttacking)
@@ -67,23 +78,63 @@ public class EnemyBattle : MonoBehaviour, BattleActionInterface
         rb.bodyType = RigidbodyType2D.Kinematic;
     }
 
+    public void AddMana(int amount)
+    {
+        enemyStats.mana += amount;
+        if(enemyStats.mana > enemyStats.maxMana)
+        {
+            enemyStats.mana = enemyStats.maxMana;
+        }
+    }
+
+    public void AddEnergy(int amount)
+    {
+        enemyStats.energy += amount;
+        if(enemyStats.energy > enemyStats.maxEnergy)
+        {
+            enemyStats.energy = enemyStats.maxEnergy;
+        }
+    }
+
+    public void DecreaseMana(int amount)
+    {
+        enemyStats.mana -= amount;
+        if (enemyStats.mana < enemyStats.maxMana)
+        {
+            enemyStats.mana = 0;
+        }
+    }
+
+    public void DecreaseEnergy()
+    {
+        enemyStats.energy = 0;
+    }
+
     public void Attack()
     {
         if (!isMoving && battleManager.GetCurrentTurn() == EnumTurns.enemy)
         {
-            _animator.SetTrigger("isAttack");
+            _animator.SetTrigger(IS_ATTACK);
             StartCoroutine(DoneAttacking(2f));
         }
     }
 
     public void Special()
     {
-        //special here
+        if (!isMoving && battleManager.GetCurrentTurn() == EnumTurns.enemy)
+        {
+            _animator.SetTrigger(IS_SPECIAL);
+            StartCoroutine(DoneAttacking(2f));
+        }
     }
 
     public void Ultimate()
     {
-        //ultimate here
+        if (!isMoving && battleManager.GetCurrentTurn() == EnumTurns.enemy && enemyStats.energy != 0)
+        {
+            _animator.SetTrigger(IS_ULTIMATE);
+            StartCoroutine(DoneAttacking(2f));
+        }
     }
 
     public void DecreaseEnemyHealth(int attackPower)
@@ -120,8 +171,25 @@ public class EnemyBattle : MonoBehaviour, BattleActionInterface
         }
         else
         {
+            battleManager.SetCurrentTurn(EnumTurns.player);
             _animator.SetBool("isDeath", true);
             battleManager.FinishBattle();
+        }
+    }
+
+    public void SetAttack()
+    {
+        if(enemyStats.energy == enemyStats.maxEnergy)
+        {
+            Ultimate();
+        }
+        else if(enemyStats.mana > skillCost)
+        {
+            Special();
+        }
+        else
+        {
+            Attack();
         }
     }
 
@@ -140,7 +208,7 @@ public class EnemyBattle : MonoBehaviour, BattleActionInterface
         try
         {
             isMoving = false;
-            _animator.SetBool("isMoving", false);
+            _animator.SetBool(IS_MOVING, false);
             rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
             if (collision.gameObject.tag.Equals("Player"))
             {

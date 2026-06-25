@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: AttackEnemy1
+  m_Name: IdleEnemy1
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -21,17 +21,13 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: -1133724584463301472, guid: 96bd9e6ffe7d99e418da41beaef15102, type: 3}
-    - time: 0.1
-      value: {fileID: -4662240516452238717, guid: 96bd9e6ffe7d99e418da41beaef15102, type: 3}
-    - time: 0.2
-      value: {fileID: 7965401377093600217, guid: 96bd9e6ffe7d99e418da41beaef15102, type: 3}
-    - time: 0.3
-      value: {fileID: 8551746157199983821, guid: 96bd9e6ffe7d99e418da41beaef15102, type: 3}
-    - time: 0.4
-      value: {fileID: -3501450650415177221, guid: 96bd9e6ffe7d99e418da41beaef15102, type: 3}
+      value: {fileID: 4723107735738678597, guid: 9081da18b880bdb4eadf9c7d12b276cf, type: 3}
+    - time: 0.15
+      value: {fileID: -7385789195546760866, guid: 9081da18b880bdb4eadf9c7d12b276cf, type: 3}
+    - time: 0.35
+      value: {fileID: 3234629978573100161, guid: 9081da18b880bdb4eadf9c7d12b276cf, type: 3}
     - time: 0.5
-      value: {fileID: 3530714143891877965, guid: 96bd9e6ffe7d99e418da41beaef15102, type: 3}
+      value: {fileID: 6373048116405451881, guid: 9081da18b880bdb4eadf9c7d12b276cf, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -54,12 +50,10 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: -1133724584463301472, guid: 96bd9e6ffe7d99e418da41beaef15102, type: 3}
-    - {fileID: -4662240516452238717, guid: 96bd9e6ffe7d99e418da41beaef15102, type: 3}
-    - {fileID: 7965401377093600217, guid: 96bd9e6ffe7d99e418da41beaef15102, type: 3}
-    - {fileID: 8551746157199983821, guid: 96bd9e6ffe7d99e418da41beaef15102, type: 3}
-    - {fileID: -3501450650415177221, guid: 96bd9e6ffe7d99e418da41beaef15102, type: 3}
-    - {fileID: 3530714143891877965, guid: 96bd9e6ffe7d99e418da41beaef15102, type: 3}
+    - {fileID: 4723107735738678597, guid: 9081da18b880bdb4eadf9c7d12b276cf, type: 3}
+    - {fileID: -7385789195546760866, guid: 9081da18b880bdb4eadf9c7d12b276cf, type: 3}
+    - {fileID: 3234629978573100161, guid: 9081da18b880bdb4eadf9c7d12b276cf, type: 3}
+    - {fileID: 6373048116405451881, guid: 9081da18b880bdb4eadf9c7d12b276cf, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
@@ -84,11 +78,4 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events:
-  - time: 0.35
-    functionName: DecreaseEnemyHealth
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 2
-    messageOptions: 0
+  m_Events: []

@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerManager : MonoBehaviour
 {
-    private PlayerInput action;
     private Rigidbody2D rb;
     private Vector2 direction;
     private float xDirection;
@@ -27,7 +26,6 @@ public class PlayerManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        action = GetComponent<PlayerInput>();
         rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _dialogueUIManager = FindFirstObjectByType<DialogueUIManager>();
@@ -100,6 +98,9 @@ public class PlayerManager : MonoBehaviour
         if (detectedGameObject.GetComponent<EnemyBattle>() != null)
         {
             enemyNPC = detectedGameObject.GetComponent<EnemyBattle>();
+            enemyNPC.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+            _battleUIManager.SetEnemyBattleManager(enemyNPC);
+            enemyNPC.SetEnemySprites(true);
         }
     }
 
@@ -113,8 +114,16 @@ public class PlayerManager : MonoBehaviour
         try
         {
             counterDialogue = 0;
+            if(talkedNPC != null)
+            {
             talkedNPC.SetActiveNotif(false);
+            }
+            if(enemyNPC != null)
+            {
+            enemyNPC.SetEnemySprites(false);
+            }
             detectedGameObject = null;
+            enemyNPC = null;
             talkedNPC = null;
             _dialogueUIManager.StatusDialogueUI(false);
         }
