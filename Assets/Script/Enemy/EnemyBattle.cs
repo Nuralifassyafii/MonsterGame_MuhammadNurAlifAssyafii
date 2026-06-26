@@ -190,6 +190,7 @@ public class EnemyBattle : MonoBehaviour, BattleActionInterface
             playerObject.HideAllEffect();
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
+            playerObject.SetDefeatedEnemy(playerObject.GetDefeatedEnemy() + 1);
             battleManager.FinishBattle();
         }
     }

@@ -26,6 +26,8 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
     private Animator _animator;
     private EnumActions actionPlayer = EnumActions.idle;
     private AudioManager _audioManager;
+    private int defeatedEnemy = 0;
+    private ButtonMenuManager _buttonMenuManager;
 
 
     private void Start()
@@ -33,6 +35,7 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
         playerStat = ScriptableObject.Instantiate(playerStat);
         _battleManager = FindFirstObjectByType<BattleUIManager>();
         _audioManager = FindFirstObjectByType<AudioManager>();
+        _buttonMenuManager = FindFirstObjectByType<ButtonMenuManager>();
         rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         posisiAwal = transform.localPosition;
@@ -54,6 +57,21 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
             }
     }
 
+    public void DestroyPlayer()
+    {
+        Destroy(gameObject);
+        _buttonMenuManager.ShowGameOver(true);
+    }
+
+    public int GetDefeatedEnemy()
+    {
+        return defeatedEnemy;
+    }
+
+    public void SetDefeatedEnemy(int totalDefeated)
+    {
+        defeatedEnemy = totalDefeated;
+    }
     public void PlayPunch()
     {
         _audioManager.PlayAudio("punch");
@@ -125,7 +143,6 @@ public class PlayerBattleManager : MonoBehaviour, BattleActionInterface
         else
         {
             _animator.SetBool("isDeathTurnBase", true);
-            //show panel death (masih belum)
         }
     }
 

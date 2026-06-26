@@ -28,6 +28,8 @@ public class BattleUIManager : MonoBehaviour
     private PlayerManager playerOpenWorld;
     private bool isBattle = false;
     private AudioManager _audioManager;
+    private int defeatedEnemy = 2;
+    private ButtonMenuManager _buttonMenuManager;
 
     public EnumTurns GetCurrentTurn()
     {
@@ -50,6 +52,10 @@ public class BattleUIManager : MonoBehaviour
         playerOpenWorld.SetPlayerObject(true);
         _audioManager.StopAllAudio();
         _audioManager.PlayAudio("openWorld");
+        if(_playerBattle.GetDefeatedEnemy() == defeatedEnemy)
+        {
+            _buttonMenuManager.ShowGameOver(false);
+        }
     }
 
     public void SetCurrentTurn(EnumTurns turn)
@@ -83,6 +89,7 @@ public class BattleUIManager : MonoBehaviour
         SetCurrentTurn(EnumTurns.player);
         _audioManager = FindFirstObjectByType<AudioManager>();
         playerOpenWorld = FindFirstObjectByType<PlayerManager>();
+        _buttonMenuManager = FindFirstObjectByType<ButtonMenuManager>();
     }
 
     public void SetHealthItemPlayer()
